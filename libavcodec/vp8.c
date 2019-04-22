@@ -35,9 +35,6 @@
 #include "vp8.h"
 #include "vp8data.h"
 
-#if ARCH_ARM
-#   include "arm/vp8.h"
-#endif
 
 #if CONFIG_VP7_DECODER && CONFIG_VP8_DECODER
 #define VPX(vp7, f) (vp7 ? vp7_ ## f : vp8_ ## f)

@@ -123,16 +123,6 @@ static av_unused void *func_ref, *func_new;
 /* Call the reference function */
 #define call_ref(...) ((func_type *)func_ref)(__VA_ARGS__)
 
-#if ARCH_X86 && HAVE_X86ASM
-/* Verifies that clobbered callee-saved registers are properly saved and restored
- * and that either no MMX registers are touched or emms is issued */
-void checkasm_checked_call(void *func, ...);
-/* Verifies that clobbered callee-saved registers are properly saved and restored
- * and issues emms for asm functions which are not required to do so */
-void checkasm_checked_call_emms(void *func, ...);
-/* Verifies that clobbered callee-saved registers are properly saved and restored
- * but doesn't issue emms. Meant for dsp functions returning float or double */
-void checkasm_checked_call_float(void *func, ...);
 
 #if ARCH_X86_64
 /* Evil hack: detect incorrect assumptions that 32-bit ints are zero-extended to 64-bit.
@@ -165,16 +155,6 @@ void checkasm_stack_clobber(uint64_t clobber, ...);
                                              (void *)checkasm_checked_call;
 #define call_new(...) checked_call(func_new, __VA_ARGS__)
 #endif
-#elif ARCH_ARM && HAVE_ARMV5TE_EXTERNAL
-/* Use a dummy argument, to offset the real parameters by 2, not only 1.
- * This makes sure that potential 8-byte-alignment of parameters is kept the same
- * even when the extra parameters have been removed. */
-void checkasm_checked_call_vfp(void *func, int dummy, ...);
-void checkasm_checked_call_novfp(void *func, int dummy, ...);
-extern void (*checkasm_checked_call)(void *func, int dummy, ...);
-#define declare_new(ret, ...) ret (*checked_call)(void *, int dummy, __VA_ARGS__) = (void *)checkasm_checked_call;
-#define call_new(...) checked_call(func_new, 0, __VA_ARGS__)
-#elif ARCH_AARCH64 && !defined(__APPLE__)
 void checkasm_stack_clobber(uint64_t clobber, ...);
 void checkasm_checked_call(void *func, ...);
 #define declare_new(ret, ...) ret (*checked_call)(void *, int, int, int, int, int, int, int, __VA_ARGS__)\

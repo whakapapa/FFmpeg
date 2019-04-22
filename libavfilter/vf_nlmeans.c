@@ -510,8 +510,6 @@ void ff_nlmeans_init(NLMeansDSPContext *dsp)
 {
     dsp->compute_safe_ssd_integral_image = compute_safe_ssd_integral_image_c;
 
-    if (ARCH_AARCH64)
-        ff_nlmeans_init_aarch64(dsp);
 }
 
 static av_cold int init(AVFilterContext *ctx)

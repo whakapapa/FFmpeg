@@ -119,7 +119,6 @@ static void check_idct(void)
     LOCAL_ALIGNED_16(int16_t, subcoef1, [4 * 4]);
     VP8DSPContext d;
     int dc;
-    declare_func_emms(AV_CPU_FLAG_MMX, void, uint8_t *dst, int16_t *block, ptrdiff_t stride);
 
     ff_vp8dsp_init(&d);
     randomize_buffers(src, dst, 4, coef);
@@ -164,7 +163,6 @@ static void check_idct_dc4(void)
     LOCAL_ALIGNED_16(int16_t, subcoef1, [4], [4 * 4]);
     VP8DSPContext d;
     int i, chroma;
-    declare_func_emms(AV_CPU_FLAG_MMX, void, uint8_t *dst, int16_t block[4][16], ptrdiff_t stride);
 
     ff_vp8dsp_init(&d);
 
@@ -207,7 +205,6 @@ static void check_luma_dc_wht(void)
     VP8DSPContext d;
     int dc_only;
     int blockx, blocky;
-    declare_func_emms(AV_CPU_FLAG_MMX, void, int16_t block[4][4][16], int16_t dc[16]);
 
     ff_vp8dsp_init(&d);
 
@@ -269,7 +266,6 @@ static void check_mc(void)
     LOCAL_ALIGNED_16(uint8_t, dst1, [16 * 16]);
     VP8DSPContext d;
     int type, k, dx, dy;
-    declare_func_emms(AV_CPU_FLAG_MMX, void, uint8_t *, ptrdiff_t, uint8_t *, ptrdiff_t, int, int, int);
 
     ff_vp78dsp_init(&d);
 
@@ -383,7 +379,7 @@ static void check_loopfilter_16y(void)
     VP8DSPContext d;
     int dir, edge, force_hev;
     int flim_E = 20, flim_I = 10, hev_thresh = 7;
-    declare_func_emms(AV_CPU_FLAG_MMX, void, uint8_t *, ptrdiff_t, int, int, int);
+
 
     ff_vp8dsp_init(&d);
 
@@ -429,7 +425,6 @@ static void check_loopfilter_8uv(void)
     VP8DSPContext d;
     int dir, edge, force_hev;
     int flim_E = 20, flim_I = 10, hev_thresh = 7;
-    declare_func_emms(AV_CPU_FLAG_MMX, void, uint8_t *, uint8_t *, ptrdiff_t, int, int, int);
 
     ff_vp8dsp_init(&d);
 
@@ -480,7 +475,6 @@ static void check_loopfilter_simple(void)
     VP8DSPContext d;
     int dir;
     int flim_E = 20, flim_I = 30, hev_thresh = 0;
-    declare_func_emms(AV_CPU_FLAG_MMX, void, uint8_t *, ptrdiff_t, int);
 
     ff_vp8dsp_init(&d);
 

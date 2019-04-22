@@ -757,8 +757,6 @@ void ff_afir_init(AudioFIRDSPContext *dsp)
 {
     dsp->fcmul_add = fcmul_add_c;
 
-    if (ARCH_X86)
-        ff_afir_init_x86(dsp);
 }
 
 static av_cold int init(AVFilterContext *ctx)

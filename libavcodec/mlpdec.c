@@ -40,10 +40,7 @@
 #include "config.h"
 
 /** number of bits used for VLC lookup - longest Huffman code is 9 */
-#if ARCH_ARM
-#define VLC_BITS            5
-#define VLC_STATIC_SIZE     64
-#else
+#if
 #define VLC_BITS            9
 #define VLC_STATIC_SIZE     512
 #endif

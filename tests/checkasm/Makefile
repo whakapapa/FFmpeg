@@ -51,9 +51,7 @@ AVUTILOBJS                              += float_dsp.o
 
 CHECKASMOBJS-$(CONFIG_AVUTIL)  += $(AVUTILOBJS)
 
-CHECKASMOBJS-$(ARCH_AARCH64)            += aarch64/checkasm.o
 CHECKASMOBJS-$(HAVE_ARMV5TE_EXTERNAL)   += arm/checkasm.o
-CHECKASMOBJS-$(HAVE_X86ASM)             += x86/checkasm.o
 
 CHECKASMOBJS += $(CHECKASMOBJS-yes) checkasm.o
 CHECKASMOBJS := $(sort $(CHECKASMOBJS:%=tests/checkasm/%))

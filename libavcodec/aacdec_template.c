@@ -3418,10 +3418,6 @@ static void aacdec_init(AACContext *c)
     c->subband_scale                            = subband_scale;
 #endif
 
-#if !USE_FIXED
-    if(ARCH_MIPS)
-        ff_aacdec_init_mips(c);
-#endif /* !USE_FIXED */
 }
 /**
  * AVOptions for Japanese DTV specific extensions (ADTS only)

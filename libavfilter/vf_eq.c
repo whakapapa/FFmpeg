@@ -191,8 +191,6 @@ static int initialize(AVFilterContext *ctx)
         (ret = set_expr(&eq->gamma_weight_pexpr, eq->gamma_weight_expr, "gamma_weight", ctx)) < 0 )
         return ret;
 
-    if (ARCH_X86)
-        ff_eq_init_x86(eq);
 
     if (eq->eval_mode == EVAL_MODE_INIT) {
         set_gamma(eq);

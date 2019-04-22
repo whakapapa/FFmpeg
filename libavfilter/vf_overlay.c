@@ -920,9 +920,6 @@ static int config_input_main(AVFilterLink *inlink)
     }
 
 end:
-    if (ARCH_X86)
-        ff_overlay_init_x86(s, s->format, inlink->format,
-                            s->alpha_format, s->main_has_alpha);
 
     return 0;
 }

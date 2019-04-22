@@ -281,8 +281,6 @@ static int config_input(AVFilterLink *inlink)
             return AVERROR(ENOMEM);
     }
 
-    if (ARCH_X86)
-        ff_hqdn3d_init_x86(s);
 
     return 0;
 }

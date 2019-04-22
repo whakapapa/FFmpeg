@@ -59,8 +59,6 @@ int ff_spatial_idwt_init(DWTContext *d, DWTPlane *p, enum dwt_type type,
         return AVERROR_INVALIDDATA;
     }
 
-    if (ARCH_X86 && bit_depth == 8)
-        ff_spatial_idwt_init_x86(d, type);
     return 0;
 }
 

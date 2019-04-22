@@ -255,11 +255,6 @@ static av_always_inline unsigned int vp56_rac_renorm(VP56RangeCoder *c)
     return code_word;
 }
 
-#if   ARCH_ARM
-#include "arm/vp56_arith.h"
-#elif ARCH_X86
-#include "x86/vp56_arith.h"
-#endif
 
 #ifndef vp56_rac_get_prob
 #define vp56_rac_get_prob vp56_rac_get_prob

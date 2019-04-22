@@ -308,8 +308,6 @@ static int config_input(AVFilterLink *inlink)
 
     pp7->dctB = dctB_c;
 
-    if (ARCH_X86)
-        ff_pp7_init_x86(pp7);
 
     return 0;
 }

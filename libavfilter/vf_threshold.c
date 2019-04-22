@@ -236,8 +236,6 @@ void ff_threshold_init(ThresholdContext *s)
         s->bpc = 2;
     }
 
-    if (ARCH_X86)
-        ff_threshold_init_x86(s);
 }
 
 static int config_output(AVFilterLink *outlink)

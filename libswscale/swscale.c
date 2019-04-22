@@ -331,10 +331,6 @@ static int swscale(SwsContext *c, const uint8_t *src[],
     ) {
         static int warnedAlready=0;
         int cpu_flags = av_get_cpu_flags();
-        if (HAVE_MMXEXT && (cpu_flags & AV_CPU_FLAG_SSE2) && !warnedAlready){
-            av_log(c, AV_LOG_WARNING, "Warning: data is not aligned! This can lead to a speed loss\n");
-            warnedAlready=1;
-        }
     }
 
     /* Note the user might start scaling the picture in the middle so this
@@ -485,10 +481,6 @@ static int swscale(SwsContext *c, const uint8_t *src[],
         if (!enough_lines)
             break;  // we can't output a dstY line so let's try with the next slice
 
-#if HAVE_MMX_INLINE
-        ff_updateMMXDitherTables(c, dstY, lumBufIndex, chrBufIndex,
-                              lastInLumBuf, lastInChrBuf);
-#endif
         if (should_dither) {
             c->chrDither8 = ff_dither_8x8_128[chrDstY & 7];
             c->lumDither8 = ff_dither_8x8_128[dstY    & 7];
@@ -521,10 +513,6 @@ static int swscale(SwsContext *c, const uint8_t *src[],
             fillPlane(dst[3], dstStride[3], length, height, lastDstY, 255);
     }
 
-#if HAVE_MMXEXT_INLINE
-    if (av_get_cpu_flags() & AV_CPU_FLAG_MMXEXT)
-        __asm__ volatile ("sfence" ::: "memory");
-#endif
     emms_c();
 
     /* store changed local vars back in the context */
@@ -599,14 +587,7 @@ SwsFunc ff_getSwsFunc(SwsContext *c)
 {
     sws_init_swscale(c);
 
-    if (ARCH_PPC)
-        ff_sws_init_swscale_ppc(c);
-    if (ARCH_X86)
-        ff_sws_init_swscale_x86(c);
-    if (ARCH_AARCH64)
-        ff_sws_init_swscale_aarch64(c);
-    if (ARCH_ARM)
-        ff_sws_init_swscale_arm(c);
+
 
     return swscale;
 }

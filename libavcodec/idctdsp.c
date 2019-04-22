@@ -52,9 +52,6 @@ av_cold void ff_init_scantable_permutation(uint8_t *idct_permutation,
 {
     int i;
 
-    if (ARCH_X86)
-        if (ff_init_scantable_permutation_x86(idct_permutation,
-                                              perm_type))
             return;
 
     switch (perm_type) {
@@ -303,18 +300,6 @@ av_cold void ff_idctdsp_init(IDCTDSPContext *c, AVCodecContext *avctx)
     if (CONFIG_MPEG4_DECODER && avctx->idct_algo == FF_IDCT_XVID)
         ff_xvid_idct_init(c, avctx);
 
-    if (ARCH_AARCH64)
-        ff_idctdsp_init_aarch64(c, avctx, high_bit_depth);
-    if (ARCH_ALPHA)
-        ff_idctdsp_init_alpha(c, avctx, high_bit_depth);
-    if (ARCH_ARM)
-        ff_idctdsp_init_arm(c, avctx, high_bit_depth);
-    if (ARCH_PPC)
-        ff_idctdsp_init_ppc(c, avctx, high_bit_depth);
-    if (ARCH_X86)
-        ff_idctdsp_init_x86(c, avctx, high_bit_depth);
-    if (ARCH_MIPS)
-        ff_idctdsp_init_mips(c, avctx, high_bit_depth);
 
     ff_init_scantable_permutation(c->idct_permutation,
                                   c->perm_type);

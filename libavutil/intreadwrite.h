@@ -64,19 +64,6 @@ typedef union {
 
 #include "config.h"
 
-#if   ARCH_ARM
-#   include "arm/intreadwrite.h"
-#elif ARCH_AVR32
-#   include "avr32/intreadwrite.h"
-#elif ARCH_MIPS
-#   include "mips/intreadwrite.h"
-#elif ARCH_PPC
-#   include "ppc/intreadwrite.h"
-#elif ARCH_TOMI
-#   include "tomi/intreadwrite.h"
-#elif ARCH_X86
-#   include "x86/intreadwrite.h"
-#endif
 
 #endif /* HAVE_AV_CONFIG_H */
 

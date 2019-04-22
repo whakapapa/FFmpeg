@@ -1803,7 +1803,6 @@ lavd 54.4.100 / 54.0.0, lavfi 3.5.0
 
 2012-08-03 - e776ee8 / 239fdf1 - lavu 51.66.101 / 51.37.1 - cpu.h
                        lsws 2.1.1   - swscale.h
-  Rename AV_CPU_FLAG_MMX2  ---> AV_CPU_FLAG_MMXEXT.
   Rename SWS_CPU_CAPS_MMX2 ---> SWS_CPU_CAPS_MMXEXT.
 
 2012-07-29 - 7c26761 / 681ed00 - lavf 54.22.100 / 54.13.0 - avformat.h

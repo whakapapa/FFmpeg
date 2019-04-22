@@ -44,9 +44,6 @@
 #include <float.h>
 #include <math.h>
 
-#if ARCH_MIPS
-#include "mips/aacsbr_mips.h"
-#endif /* ARCH_MIPS */
 
 static VLC vlc_sbr[10];
 static void aacsbr_func_ptr_init(AACSBRContext *c);

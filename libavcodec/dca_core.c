@@ -25,9 +25,6 @@
 #include "dcamath.h"
 #include "dca_syncwords.h"
 
-#if ARCH_ARM
-#include "arm/dca.h"
-#endif
 
 enum HeaderType {
     HEADER_CORE,

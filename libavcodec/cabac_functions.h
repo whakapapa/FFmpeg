@@ -36,17 +36,6 @@
 #define UNCHECKED_BITSTREAM_READER !CONFIG_SAFE_BITSTREAM_READER
 #endif
 
-#if ARCH_AARCH64
-#   include "aarch64/cabac.h"
-#endif
-#if ARCH_ARM
-#   include "arm/cabac.h"
-#endif
-#if ARCH_X86
-#   include "x86/cabac.h"
-#endif
-#if ARCH_MIPS
-#   include "mips/cabac.h"
 #endif
 
 static const uint8_t * const ff_h264_norm_shift = ff_h264_cabac_tables + H264_NORM_SHIFT_OFFSET;

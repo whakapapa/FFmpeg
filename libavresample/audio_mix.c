@@ -325,8 +325,6 @@ static av_cold int mix_function_init(AudioMix *am)
     ff_audio_mix_set_func(am, AV_SAMPLE_FMT_FLTP, AV_MIX_COEFF_TYPE_FLT,
                           2, 6, 1, 1, "C", mix_2_to_6_fltp_flt_c);
 
-    if (ARCH_X86)
-        ff_audio_mix_init_x86(am);
 
     if (!am->mix) {
         av_log(am->avr, AV_LOG_ERROR, "audio_mix: NO FUNCTION FOUND: [fmt=%s] "

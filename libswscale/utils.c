@@ -593,11 +593,6 @@ static av_cold int initFilter(int16_t **outFilter, int32_t **filterPos,
             filterAlign = 1;
     }
 
-    if (HAVE_MMX && cpu_flags & AV_CPU_FLAG_MMX) {
-        // special case for unscaled vertical filtering
-        if (minFilterSize == 1 && filterAlign == 2)
-            filterAlign = 1;
-    }
 
     av_assert0(minFilterSize > 0);
     filterSize = (minFilterSize + (filterAlign - 1)) & (~(filterAlign - 1));
@@ -978,10 +973,6 @@ int sws_setColorspaceDetails(struct SwsContext *c, const int inv_table[4],
                                  contrast, saturation);
         // FIXME factorize
 
-        if (ARCH_PPC)
-            ff_yuv2rgb_init_tables_ppc(c, inv_table, brightness,
-                                       contrast, saturation);
-    }
 
     fill_rgb2yuv_table(c, table, dstRange);
 
@@ -1606,66 +1597,6 @@ av_cold int sws_init_context(SwsContext *c, SwsFilter *srcFilter,
 
     /* precalculate horizontal scaler filter coefficients */
     {
-#if HAVE_MMXEXT_INLINE
-// can't downscale !!!
-        if (c->canMMXEXTBeUsed && (flags & SWS_FAST_BILINEAR)) {
-            c->lumMmxextFilterCodeSize = ff_init_hscaler_mmxext(dstW, c->lumXInc, NULL,
-                                                             NULL, NULL, 8);
-            c->chrMmxextFilterCodeSize = ff_init_hscaler_mmxext(c->chrDstW, c->chrXInc,
-                                                             NULL, NULL, NULL, 4);
-
-#if USE_MMAP
-            c->lumMmxextFilterCode = mmap(NULL, c->lumMmxextFilterCodeSize,
-                                          PROT_READ | PROT_WRITE,
-                                          MAP_PRIVATE | MAP_ANONYMOUS,
-                                          -1, 0);
-            c->chrMmxextFilterCode = mmap(NULL, c->chrMmxextFilterCodeSize,
-                                          PROT_READ | PROT_WRITE,
-                                          MAP_PRIVATE | MAP_ANONYMOUS,
-                                          -1, 0);
-#elif HAVE_VIRTUALALLOC
-            c->lumMmxextFilterCode = VirtualAlloc(NULL,
-                                                  c->lumMmxextFilterCodeSize,
-                                                  MEM_COMMIT,
-                                                  PAGE_EXECUTE_READWRITE);
-            c->chrMmxextFilterCode = VirtualAlloc(NULL,
-                                                  c->chrMmxextFilterCodeSize,
-                                                  MEM_COMMIT,
-                                                  PAGE_EXECUTE_READWRITE);
-#else
-            c->lumMmxextFilterCode = av_malloc(c->lumMmxextFilterCodeSize);
-            c->chrMmxextFilterCode = av_malloc(c->chrMmxextFilterCodeSize);
-#endif
-
-#ifdef MAP_ANONYMOUS
-            if (c->lumMmxextFilterCode == MAP_FAILED || c->chrMmxextFilterCode == MAP_FAILED)
-#else
-            if (!c->lumMmxextFilterCode || !c->chrMmxextFilterCode)
-#endif
-            {
-                av_log(c, AV_LOG_ERROR, "Failed to allocate MMX2FilterCode\n");
-                return AVERROR(ENOMEM);
-            }
-
-            FF_ALLOCZ_OR_GOTO(c, c->hLumFilter,    (dstW           / 8 + 8) * sizeof(int16_t), fail);
-            FF_ALLOCZ_OR_GOTO(c, c->hChrFilter,    (c->chrDstW     / 4 + 8) * sizeof(int16_t), fail);
-            FF_ALLOCZ_OR_GOTO(c, c->hLumFilterPos, (dstW       / 2 / 8 + 8) * sizeof(int32_t), fail);
-            FF_ALLOCZ_OR_GOTO(c, c->hChrFilterPos, (c->chrDstW / 2 / 4 + 8) * sizeof(int32_t), fail);
-
-            ff_init_hscaler_mmxext(      dstW, c->lumXInc, c->lumMmxextFilterCode,
-                                c->hLumFilter, (uint32_t*)c->hLumFilterPos, 8);
-            ff_init_hscaler_mmxext(c->chrDstW, c->chrXInc, c->chrMmxextFilterCode,
-                                c->hChrFilter, (uint32_t*)c->hChrFilterPos, 4);
-
-#if USE_MMAP
-            if (   mprotect(c->lumMmxextFilterCode, c->lumMmxextFilterCodeSize, PROT_EXEC | PROT_READ) == -1
-                || mprotect(c->chrMmxextFilterCode, c->chrMmxextFilterCodeSize, PROT_EXEC | PROT_READ) == -1) {
-                av_log(c, AV_LOG_ERROR, "mprotect failed, cannot use fast bilinear scaler\n");
-                goto fail;
-            }
-#endif
-        } else
-#endif /* HAVE_MMXEXT_INLINE */
         {
             const int filterAlign = X86_MMX(cpu_flags)     ? 4 :
                                     PPC_ALTIVEC(cpu_flags) ? 8 :
@@ -1717,24 +1648,6 @@ av_cold int sws_init_context(SwsContext *c, SwsFilter *srcFilter,
 
             goto fail;
 
-#if HAVE_ALTIVEC
-        FF_ALLOC_OR_GOTO(c, c->vYCoeffsBank, sizeof(vector signed short) * c->vLumFilterSize * c->dstH,    fail);
-        FF_ALLOC_OR_GOTO(c, c->vCCoeffsBank, sizeof(vector signed short) * c->vChrFilterSize * c->chrDstH, fail);
-
-        for (i = 0; i < c->vLumFilterSize * c->dstH; i++) {
-            int j;
-            short *p = (short *)&c->vYCoeffsBank[i];
-            for (j = 0; j < 8; j++)
-                p[j] = c->vLumFilter[i];
-        }
-
-        for (i = 0; i < c->vChrFilterSize * c->chrDstH; i++) {
-            int j;
-            short *p = (short *)&c->vCCoeffsBank[i];
-            for (j = 0; j < 8; j++)
-                p[j] = c->vChrFilter[i];
-        }
-#endif
     }
 
     for (i = 0; i < 4; i++)
@@ -2319,34 +2232,12 @@ void sws_freeContext(SwsContext *c)
     av_freep(&c->vChrFilter);
     av_freep(&c->hLumFilter);
     av_freep(&c->hChrFilter);
-#if HAVE_ALTIVEC
-    av_freep(&c->vYCoeffsBank);
-    av_freep(&c->vCCoeffsBank);
-#endif
 
     av_freep(&c->vLumFilterPos);
     av_freep(&c->vChrFilterPos);
     av_freep(&c->hLumFilterPos);
     av_freep(&c->hChrFilterPos);
 
-#if HAVE_MMX_INLINE
-#if USE_MMAP
-    if (c->lumMmxextFilterCode)
-        munmap(c->lumMmxextFilterCode, c->lumMmxextFilterCodeSize);
-    if (c->chrMmxextFilterCode)
-        munmap(c->chrMmxextFilterCode, c->chrMmxextFilterCodeSize);
-#elif HAVE_VIRTUALALLOC
-    if (c->lumMmxextFilterCode)
-        VirtualFree(c->lumMmxextFilterCode, 0, MEM_RELEASE);
-    if (c->chrMmxextFilterCode)
-        VirtualFree(c->chrMmxextFilterCode, 0, MEM_RELEASE);
-#else
-    av_free(c->lumMmxextFilterCode);
-    av_free(c->chrMmxextFilterCode);
-#endif
-    c->lumMmxextFilterCode = NULL;
-    c->chrMmxextFilterCode = NULL;
-#endif /* HAVE_MMX_INLINE */
 
     av_freep(&c->yuvTable);
     av_freep(&c->formatConvBuffer);

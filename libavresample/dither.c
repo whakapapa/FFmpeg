@@ -338,8 +338,6 @@ static av_cold void dither_init(DitherDSPContext *ddsp,
     else
         ddsp->dither_int_to_float = dither_int_to_float_triangular_c;
 
-    if (ARCH_X86)
-        ff_dither_init_x86(ddsp, method);
 }
 
 DitherContext *ff_dither_alloc(AVAudioResampleContext *avr,

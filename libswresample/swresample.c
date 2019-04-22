@@ -481,7 +481,6 @@ static int resample(SwrContext *s, AudioData *out_param, int out_count,
     AudioData in, out, tmp;
     int ret_sum=0;
     int border=0;
-    int padless = ARCH_X86 && s->engine == SWR_ENGINE_SWR ? 7 : 0;
 
     av_assert1(s->in_buffer.ch_count == in_param->ch_count);
     av_assert1(s->in_buffer.planar   == in_param->planar);

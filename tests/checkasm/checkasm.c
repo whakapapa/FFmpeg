@@ -61,12 +61,6 @@
 #define isatty(fd) 1
 #endif
 
-#if ARCH_ARM && HAVE_ARMV5TE_EXTERNAL
-#include "libavutil/arm/cpu.h"
-
-void (*checkasm_checked_call)(void *func, int dummy, ...) = checkasm_checked_call_novfp;
-#endif
-
 /* List of tests to invoke */
 static const struct {
     const char *name;
@@ -185,40 +179,6 @@ static const struct {
     const char *suffix;
     int flag;
 } cpus[] = {
-#if   ARCH_AARCH64
-    { "ARMV8",    "armv8",    AV_CPU_FLAG_ARMV8 },
-    { "NEON",     "neon",     AV_CPU_FLAG_NEON },
-#elif ARCH_ARM
-    { "ARMV5TE",  "armv5te",  AV_CPU_FLAG_ARMV5TE },
-    { "ARMV6",    "armv6",    AV_CPU_FLAG_ARMV6 },
-    { "ARMV6T2",  "armv6t2",  AV_CPU_FLAG_ARMV6T2 },
-    { "VFP",      "vfp",      AV_CPU_FLAG_VFP },
-    { "VFP_VM",   "vfp_vm",   AV_CPU_FLAG_VFP_VM },
-    { "VFPV3",    "vfp3",     AV_CPU_FLAG_VFPV3 },
-    { "NEON",     "neon",     AV_CPU_FLAG_NEON },
-#elif ARCH_PPC
-    { "ALTIVEC",  "altivec",  AV_CPU_FLAG_ALTIVEC },
-    { "VSX",      "vsx",      AV_CPU_FLAG_VSX },
-    { "POWER8",   "power8",   AV_CPU_FLAG_POWER8 },
-#elif ARCH_X86
-    { "MMX",      "mmx",      AV_CPU_FLAG_MMX|AV_CPU_FLAG_CMOV },
-    { "MMXEXT",   "mmxext",   AV_CPU_FLAG_MMXEXT },
-    { "3DNOW",    "3dnow",    AV_CPU_FLAG_3DNOW },
-    { "3DNOWEXT", "3dnowext", AV_CPU_FLAG_3DNOWEXT },
-    { "SSE",      "sse",      AV_CPU_FLAG_SSE },
-    { "SSE2",     "sse2",     AV_CPU_FLAG_SSE2|AV_CPU_FLAG_SSE2SLOW },
-    { "SSE3",     "sse3",     AV_CPU_FLAG_SSE3|AV_CPU_FLAG_SSE3SLOW },
-    { "SSSE3",    "ssse3",    AV_CPU_FLAG_SSSE3|AV_CPU_FLAG_ATOM },
-    { "SSE4.1",   "sse4",     AV_CPU_FLAG_SSE4 },
-    { "SSE4.2",   "sse42",    AV_CPU_FLAG_SSE42 },
-    { "AES-NI",   "aesni",    AV_CPU_FLAG_AESNI },
-    { "AVX",      "avx",      AV_CPU_FLAG_AVX },
-    { "XOP",      "xop",      AV_CPU_FLAG_XOP },
-    { "FMA3",     "fma3",     AV_CPU_FLAG_FMA3 },
-    { "FMA4",     "fma4",     AV_CPU_FLAG_FMA4 },
-    { "AVX2",     "avx2",     AV_CPU_FLAG_AVX2 },
-    { "AVX-512",  "avx512",   AV_CPU_FLAG_AVX512 },
-#endif
     { NULL }
 };
 
@@ -653,10 +613,6 @@ int main(int argc, char *argv[])
     unsigned int seed = av_get_random_seed();
     int i, ret = 0;
 
-#if ARCH_ARM && HAVE_ARMV5TE_EXTERNAL
-    if (have_vfp(av_get_cpu_flags()) || have_neon(av_get_cpu_flags()))
-        checkasm_checked_call = checkasm_checked_call_vfp;
-#endif
 
     if (!tests[0].func || !cpus[0].flag) {
         fprintf(stderr, "checkasm: no tests to perform\n");

@@ -41,8 +41,7 @@
 #define check_clear(func, size)                                     \
 do {                                                                \
     if (check_func(h.func, "blockdsp." #func)) {                    \
-        declare_func_emms(AV_CPU_FLAG_MMX, void, int16_t *block);   \
-        randomize_buffers(size);                                    \
+                               \
         call_ref(buf0);                                             \
         call_new(buf1);                                             \
         if (memcmp(buf0, buf1, sizeof(*buf0) * size))               \

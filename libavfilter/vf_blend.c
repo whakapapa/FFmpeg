@@ -721,8 +721,6 @@ void ff_blend_init(FilterParams *param, int depth)
         param->blend = depth > 8 ? blend_copytop_16 : blend_copytop_8;
     }
 
-    if (ARCH_X86)
-        ff_blend_init_x86(param, depth);
 }
 
 static int config_output(AVFilterLink *outlink)

@@ -63,11 +63,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#if ARCH_ARM
-#   include "arm/aac.h"
-#elif ARCH_MIPS
-#   include "mips/aacdec_mips.h"
-#endif
 
 static av_always_inline void reset_predict_state(PredictorState *ps)
 {

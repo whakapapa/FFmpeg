@@ -326,8 +326,6 @@ static int config_input_ref(AVFilterLink *inlink)
     s->average_max = lrint(average_max);
 
     s->dsp.sse_line = desc->comp[0].depth > 8 ? sse_line_16bit : sse_line_8bit;
-    if (ARCH_X86)
-        ff_psnr_init_x86(&s->dsp, desc->comp[0].depth);
 
     return 0;
 }

@@ -89,8 +89,6 @@ av_cold void ff_v210enc_init(V210EncContext *s)
     s->sample_factor_8  = 1;
     s->sample_factor_10 = 1;
 
-    if (ARCH_X86)
-        ff_v210enc_init_x86(s);
 }
 
 static av_cold int encode_init(AVCodecContext *avctx)

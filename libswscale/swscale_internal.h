@@ -494,16 +494,6 @@ typedef struct SwsContext {
 
     const uint8_t *chrDither8, *lumDither8;
 
-#if HAVE_ALTIVEC
-    vector signed short   CY;
-    vector signed short   CRV;
-    vector signed short   CBU;
-    vector signed short   CGU;
-    vector signed short   CGV;
-    vector signed short   OY;
-    vector unsigned short CSHIFT;
-    vector signed short  *vYCoeffsBank, *vCCoeffsBank;
-#endif
 
     int use_mmx_vfilter;
 

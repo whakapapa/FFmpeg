@@ -94,15 +94,7 @@ static const struct algo idct_tab[] = {
 #endif /* CONFIG_MPEG4_DECODER */
 };
 
-#if ARCH_AARCH64
-#include "aarch64/dct.c"
-#elif ARCH_ARM
-#include "arm/dct.c"
-#elif ARCH_PPC
-#include "ppc/dct.c"
-#elif ARCH_X86
-#include "x86/dct.c"
-#else
+#if
 static const struct algo fdct_tab_arch[] = { { 0 } };
 static const struct algo idct_tab_arch[] = { { 0 } };
 #endif
@@ -150,10 +142,6 @@ static void permute(int16_t dst[64], const int16_t src[64],
 {
     int i;
 
-#if ARCH_X86
-    if (permute_x86(dst, src, perm_type))
-        return;
-#endif
 
     switch (perm_type) {
     case FF_IDCT_PERM_LIBMPEG2:

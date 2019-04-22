@@ -106,8 +106,6 @@ av_cold int ff_rdft_init(RDFTContext *s, int nbits, enum RDFTransformType trans)
     s->tsin = ff_cos_tabs[nbits] + (n >> 2);
     s->rdft_calc   = rdft_calc_c;
 
-    if (ARCH_ARM) ff_rdft_init_arm(s);
-
     return 0;
 }
 

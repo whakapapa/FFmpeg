@@ -47,9 +47,6 @@
 #include "pixfmt.h"
 #include "version.h"
 
-#if ARCH_X86
-#   include "x86/emms.h"
-#endif
 
 #ifndef emms_c
 #   define emms_c() do {} while(0)

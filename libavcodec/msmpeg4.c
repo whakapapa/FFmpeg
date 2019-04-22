@@ -221,25 +221,6 @@ int ff_msmpeg4_pred_dc(MpegEncContext *s, int n,
        necessitate to modify mpegvideo.c. The problem comes from the
        fact they decided to store the quantized DC (which would lead
        to problems if Q could vary !) */
-#if ARCH_X86 && HAVE_7REGS && HAVE_EBX_AVAILABLE
-    __asm__ volatile(
-        "movl %3, %%eax         \n\t"
-        "shrl $1, %%eax         \n\t"
-        "addl %%eax, %2         \n\t"
-        "addl %%eax, %1         \n\t"
-        "addl %0, %%eax         \n\t"
-        "imull %4               \n\t"
-        "movl %%edx, %0         \n\t"
-        "movl %1, %%eax         \n\t"
-        "imull %4               \n\t"
-        "movl %%edx, %1         \n\t"
-        "movl %2, %%eax         \n\t"
-        "imull %4               \n\t"
-        "movl %%edx, %2         \n\t"
-        : "+b" (a), "+c" (b), "+D" (c)
-        : "g" (scale), "S" (ff_inverse[scale])
-        : "%eax", "%edx"
-    );
 #else
     /* Divisions are costly everywhere; optimize the most common case. */
     if (scale == 8) {
@@ -334,4 +315,3 @@ int ff_msmpeg4_pred_dc(MpegEncContext *s, int n,
     *dc_val_ptr = &dc_val[0];
     return pred;
 }
-

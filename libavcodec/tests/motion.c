@@ -116,8 +116,6 @@ int main(int argc, char **argv)
     AVCodecContext *ctx;
     int c;
     MECmpContext cctx, mmxctx;
-    int flags[2] = { AV_CPU_FLAG_MMX, AV_CPU_FLAG_MMXEXT };
-    int flags_size = HAVE_MMXEXT ? 2 : 1;
 
     if (argc > 1) {
         help();

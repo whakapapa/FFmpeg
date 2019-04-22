@@ -80,9 +80,6 @@ av_pixelutils_sad_fn av_pixelutils_get_sad_fn(int w_bits, int h_bits, int aligne
     if (w_bits != h_bits) // only squared sad for now
         return NULL;
 
-#if ARCH_X86
-    ff_pixelutils_sad_init_x86(sad, aligned);
-#endif
 
     return sad[w_bits - 1];
 #endif

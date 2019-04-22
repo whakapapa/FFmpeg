@@ -140,20 +140,7 @@ static inline int dirac_get_arith_bit(DiracArith *c, int ctx)
 
     range_times_prob = (c->range * prob_zero) >> 16;
 
-#if ARCH_X86 && HAVE_FAST_CMOV && HAVE_INLINE_ASM && HAVE_6REGS
-    low   -= range_times_prob << 16;
-    range -= range_times_prob;
-    bit = 0;
-    __asm__(
-        "cmpl   %5, %4 \n\t"
-        "setae  %b0    \n\t"
-        "cmovb  %3, %2 \n\t"
-        "cmovb  %5, %1 \n\t"
-        : "+q"(bit), "+r"(range), "+r"(low)
-        : "r"(c->low), "r"(c->low>>16),
-          "r"(range_times_prob)
-    );
-#else
+
     bit = (low >> 16) >= range_times_prob;
     if (bit) {
         low   -= range_times_prob << 16;
@@ -161,7 +148,6 @@ static inline int dirac_get_arith_bit(DiracArith *c, int ctx)
     } else {
         range  = range_times_prob;
     }
-#endif
 
     c->contexts[ctx] += ff_dirac_prob_branchless[prob_zero>>8][bit];
     c->low   = low;

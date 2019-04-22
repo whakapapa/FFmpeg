@@ -54,7 +54,6 @@ static void check_add_res(HEVCDSPContext h, int bit_depth)
         int block_size = 1 << i;
         int size = block_size * block_size;
         ptrdiff_t stride = block_size << (bit_depth > 8);
-        declare_func_emms(AV_CPU_FLAG_MMX, void, uint8_t *dst, int16_t *res, ptrdiff_t stride);
 
         randomize_buffers(res0, size);
         randomize_buffers2(dst0, size);

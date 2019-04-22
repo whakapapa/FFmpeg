@@ -1,0 +1,9 @@
+remove references to:
+
+
+spark
+neon
+bfin
+
+
+TEMPLATE_PP_MMXEXT

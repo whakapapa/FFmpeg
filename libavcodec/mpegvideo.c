@@ -313,16 +313,6 @@ static av_cold int dct_init(MpegEncContext *s)
     if (HAVE_INTRINSICS_NEON)
         ff_mpv_common_init_neon(s);
 
-    if (ARCH_ALPHA)
-        ff_mpv_common_init_axp(s);
-    if (ARCH_ARM)
-        ff_mpv_common_init_arm(s);
-    if (ARCH_PPC)
-        ff_mpv_common_init_ppc(s);
-    if (ARCH_X86)
-        ff_mpv_common_init_x86(s);
-    if (ARCH_MIPS)
-        ff_mpv_common_init_mips(s);
 
     return 0;
 }

@@ -20,13 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02111, USA.
  *****************************************************************************/
 
-#include "libavutil/arm/asm.S"
 
 /* override fpu so that NEON instructions are rejected */
-#if HAVE_VFP
-FPU     .fpu            vfp
-ELF     .eabi_attribute 10, 0           @ suppress Tag_FP_arch
-#endif
 
 const register_init, align=3
     .quad 0x21f86d66c8ca00ce
@@ -162,7 +157,4 @@ function checkasm_checked_call_\variant, export=1
 endfunc
 .endm
 
-#if HAVE_VFP || HAVE_NEON
-clobbercheck vfp
-#endif
 clobbercheck novfp

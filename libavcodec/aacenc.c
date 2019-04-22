@@ -1101,11 +1101,7 @@ static av_cold int aac_encode_init(AVCodecContext *avctx)
     s->abs_pow34   = abs_pow34_v;
     s->quant_bands = quantize_bands;
 
-    if (ARCH_X86)
-        ff_aac_dsp_init_x86(s);
 
-    if (HAVE_MIPSDSP)
-        ff_aac_coder_init_mips(s);
 
     if ((ret = ff_thread_once(&aac_table_init, &aac_encode_init_tables)) != 0)
         return AVERROR_UNKNOWN;

@@ -42,9 +42,6 @@
 #include "h264_mvpred.h"
 #include "mpegutils.h"
 
-#if ARCH_X86
-#include "x86/h264_cabac.c"
-#endif
 
 /* Cabac pre state table */
 
@@ -1634,18 +1631,12 @@ decode_cabac_residual_internal(const H264Context *h, H264SliceContext *sl,
     uint8_t *last_coeff_ctx_base;
     uint8_t *abs_level_m1_ctx_base;
 
-#if !ARCH_X86
-#define CABAC_ON_STACK
-#endif
 #ifdef CABAC_ON_STACK
 #define CC &cc
     CABACContext cc;
     cc.range     = sl->cabac.range;
     cc.low       = sl->cabac.low;
     cc.bytestream= sl->cabac.bytestream;
-#if !UNCHECKED_BITSTREAM_READER || ARCH_AARCH64
-    cc.bytestream_end = sl->cabac.bytestream_end;
-#endif
 #else
 #define CC &sl->cabac
 #endif

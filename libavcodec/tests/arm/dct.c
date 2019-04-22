@@ -33,8 +33,5 @@ static const struct algo idct_tab_arch[] = {
 #if HAVE_ARMV6
     { "SIMPLE-ARMV6",   ff_simple_idct_armv6,   FF_IDCT_PERM_LIBMPEG2,  AV_CPU_FLAG_ARMV6 },
 #endif
-#if HAVE_NEON
-    { "SIMPLE-NEON",    ff_simple_idct_neon,    FF_IDCT_PERM_PARTTRANS, AV_CPU_FLAG_NEON },
-#endif
     { 0 }
 };
